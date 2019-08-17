@@ -10,7 +10,6 @@ void setup(void)
   Serial.begin(115200);
   Serial.println("Paleidziamos stakles!");
 
-  stakles.debug = true;
   stakles.power_init(A0);
   stakles.led_init(8, 7); // (CLK -> D8, DIO -> D7)
   stakles.encoder_init(2, 3);

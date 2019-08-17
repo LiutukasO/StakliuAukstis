@@ -1,5 +1,4 @@
 #include "Stakles.h"
-#include <EEPROM.h>
 
 Stakles::Stakles (){
   this->debug_time = millis();
@@ -69,7 +68,6 @@ void Stakles::button_R_init (uint8_t pin){
 
 bool Stakles::button_L_pressed(){
   if (this->encoder_time + 300 > millis()) return false;
-  //if (this->debug) Serial.print("\nbutton_L_pressed A:"+String(this->height));
   if      (this->button_L.getSpeedLevel() <= 1) this->height++;
   if      (this->button_L.getSpeedLevel() <= 3) this->height += this->steps_per_round/4;
   else if (this->button_L.getSpeedLevel() <= 5) this->height += this->steps_per_round/2;
@@ -77,13 +75,11 @@ bool Stakles::button_L_pressed(){
   else                                          this->height += this->steps_per_round*10;
   this->encoder->write(this->height);
   this->encoder_time = millis();
-  //if (this->debug) Serial.print("\nbutton_L_pressed A:"+String(this->height));
   return true;
 }
 
 bool Stakles::button_R_pressed(){
   if (this->encoder_time + 300 > millis()) return false;
-  //if (this->debug) Serial.print("\nbutton_R_pressed A:"+String(this->height));
   if      (this->button_R.getSpeedLevel() <= 1) this->height--;
   if      (this->button_R.getSpeedLevel() <= 3) this->height -= this->steps_per_round/4;
   else if (this->button_R.getSpeedLevel() <= 5) this->height -= this->steps_per_round/2;
@@ -91,7 +87,6 @@ bool Stakles::button_R_pressed(){
   else                                          this->height -= this->steps_per_round*10;
   this->encoder->write(this->height);
   this->encoder_time = millis();
-  //if (this->debug) Serial.print("\nbutton_R_pressed A:"+String(this->height));
   return true;
 }
 
@@ -130,10 +125,6 @@ void Stakles::set_height(uint32_t height){
 
 float Stakles::get_height(){
   return (float) round((float)this->delta_step * this->height *10)/10;
-}
-
-float Stakles::get_height(uint32_t height){
-  return (float) round((float)this->delta_step * height *10)/10;
 }
 
 /**************************************************/

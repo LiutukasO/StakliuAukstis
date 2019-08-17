@@ -34,7 +34,6 @@ class Stakles
     void move_to_r ();
     void set_height  (uint32_t height);
     float get_height();
-    float get_height(uint32_t height);
 
   private:
     unsigned long int height = 320; // 40mm 

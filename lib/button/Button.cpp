@@ -1,18 +1,17 @@
 #include "Button.h"
-#include "Arduino.h"
 
 Button::Button (){
 }
 
-Button::Button (uint8_t pin){
+Button::Button (byte pin){
     this->init(pin, 25);
 }
 
-Button::Button (uint8_t pin, unsigned int debounceDelay){
+Button::Button (byte pin, byte debounceDelay){
     this->init(pin, debounceDelay);
 }
 
-void Button::init (uint8_t pin, unsigned int debounceDelay){
+void Button::init (byte pin, byte debounceDelay){
   pinMode(pin,  INPUT_PULLUP);
   this->attach(pin);
   this->interval(debounceDelay);
@@ -27,8 +26,8 @@ unsigned long Button::getStateTime(){
     return this->duration();
 }
 
-unsigned int Button::getSpeedLevel(){
+byte Button::getSpeedLevel(){
     unsigned long period = millis() - this->stateChangeLastTime;
-    unsigned int speedLevel = (int) period / 1000;
+    byte speedLevel = (byte) period / 1000;
     return speedLevel;
 }

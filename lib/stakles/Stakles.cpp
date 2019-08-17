@@ -10,7 +10,7 @@ Stakles::Stakles (){
 /****************   POWER    **********************/
 /**************************************************/
 
-void Stakles::power_init(uint8_t pin){
+void Stakles::power_init(byte pin){
   this->power_pin = pin;
   pinMode(this->power_pin, INPUT);
 }
@@ -39,7 +39,7 @@ bool Stakles::config_update(){
 /****************    LED   ************************/
 /**************************************************/
 
-void Stakles::led_init(uint8_t CLK, uint8_t DIO){
+void Stakles::led_init(byte CLK, byte DIO){
   this->led = TM1637Display(CLK, DIO);
   this->led.setBrightness(0x0a);
   this->led_update();
@@ -58,11 +58,11 @@ bool Stakles::led_update(){
 /****************   BUTTON    *********************/
 /**************************************************/
 
-void Stakles::button_L_init (uint8_t pin){
+void Stakles::button_L_init (byte pin){
   this->button_L = Button(pin, debounceDelay);
 }
 
-void Stakles::button_R_init (uint8_t pin){
+void Stakles::button_R_init (byte pin){
   this->button_R = Button(pin, debounceDelay);
 }
 
@@ -102,7 +102,7 @@ bool Stakles::button_update(){
 /**************************************************/
 
 
-void Stakles::encoder_init(uint8_t l_pin, uint8_t r_pin){
+void Stakles::encoder_init(byte l_pin, byte r_pin){
   this->encoder = new Encoder(l_pin, r_pin);
   this->encoder->write(this->height);
 }
@@ -119,7 +119,7 @@ bool Stakles::encoder_update(){
 /****************   MOVE   ************************/
 /**************************************************/
 
-void Stakles::set_height(uint32_t height){
+void Stakles::set_height(unsigned int height){
   this->height = height;
 }
 

@@ -40,7 +40,7 @@ bool Config::load() {
 
 
 bool Config::save(){
-  if (this->isConfigSaved()) return false;
+  if (this->isConfigSaved()) return true;
   this->config_time = millis();
   //EEPROM.begin(4096);
   this->config.write_counter++;
@@ -76,12 +76,12 @@ bool Config::isConfigSaved(){
   return this->saved;
 }
 
-void Config::setHeight(unsigned long int height){
+void Config::setHeight(unsigned int height){
   if (this->config.height == height) return; 
   this->config.height = height;
   this->saved = false;
 }
 
-unsigned long int Config::getHeight(){
+unsigned int Config::getHeight(){
   return this->config.height;
 }

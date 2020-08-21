@@ -3,26 +3,32 @@
 
 #include "Stakles.h"
 
-Stakles stakles;
+Stakles* stakles;
 
 void setup(void)
 {
   Serial.begin(115200);
   Serial.println("Paleidziamos stakles!");
 
-  stakles.power_init(A0);
-  stakles.led_init(8, 7); // (CLK -> D8, DIO -> D7)
-  stakles.encoder_init(2, 3);
-  stakles.button_L_init(9);
-  stakles.button_R_init(10);
+  float milimetersPerRound    = 0.2;
+  unsigned char stepsPerRound = 16;
+  unsigned int maxMilimeters  = 250;
 
-  Serial.println("Stakles veikia!");
+  stakles = new Stakles(milimetersPerRound, stepsPerRound, maxMilimeters);
+  stakles->power_init(A0);
+  stakles->led_init(8, 7); // (CLK -> D8, DIO -> D7)
+  stakles->encoder_init(2, 3);
+  stakles->button_TOP_init(9);
+  stakles->button_DOWN_init(10);
+  stakles->init();
+
+  Serial.println("\r\nStakles veikia!");
 }
 
 
 void loop(void)
 {
-  stakles.process();
+  stakles->process();
 }
 
 

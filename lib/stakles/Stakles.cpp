@@ -1,10 +1,15 @@
 #include "Stakles.h"
 
-Stakles::Stakles (){
+Stakles::Stakles (float milimetersPerRound, unsigned char stepsPerRound, unsigned int maxMilimeters){
   this->debug_time = millis();
-  this->config = Config();
-  this->height = this->config.getHeight();
+  this->position = new Position(milimetersPerRound, stepsPerRound, maxMilimeters);
 }
+
+void Stakles::init(){
+  this->config = new Config();
+  this->position->setPosition(this->config->getHeight());
+}
+
 
 /**************************************************/
 /****************   POWER    **********************/
@@ -27,12 +32,12 @@ bool Stakles::is_power_on(){
 /**************************************************/
 
 bool Stakles::config_update(){
-  if (this->encoder_time+2000 > millis()) return false;
-  if (this->config.getConfigTime()+2000 > millis()) return false;
-  if (this->height == this->config.getHeight()) return false;
+  if (this->position->getPositionTime()+2000 > millis()) return false;
+  if (this->config->getConfigTime()+2000 > millis()) return false;
+  if (this->position->getHeightInMilimeters() == this->config->getHeight()) return false;
   if (this->is_power_on()) return false;
-  this->config.setHeight(this->height);
-  return this->config.save();
+  this->config->setHeight(this->position->getHeightInMilimeters());
+  return this->config->save();
 }
 
 /**************************************************/
@@ -47,10 +52,10 @@ void Stakles::led_init(byte CLK, byte DIO){
 
 bool Stakles::led_update(){
   if (this->led.update_time + 300 > millis()) return false;
-  float tmp_height = this->get_height();
-  if (tmp_height == this->led.getValue()) return false;
-  if (this->debug) Serial.print("\n"+String(this->height, DEC)+" LED OLD:["+String(this->led.getValue(), DEC)+"] NEW:["+String(tmp_height, DEC)+"]");
-  this->led.showFloat(tmp_height, 1);
+  float height_in_mm = this->position->getHeightInMilimeters();
+  if (height_in_mm == this->led.getValue()) return false;
+  this->led.showFloat(height_in_mm, 1);
+  this->led.update_time = millis();
   return true;
 }
 
@@ -58,41 +63,39 @@ bool Stakles::led_update(){
 /****************   BUTTON    *********************/
 /**************************************************/
 
-void Stakles::button_L_init (byte pin){
-  this->button_L = Button(pin, debounceDelay);
+void Stakles::button_TOP_init (byte pin){
+  this->button_TOP = Button(pin);
 }
 
-void Stakles::button_R_init (byte pin){
-  this->button_R = Button(pin, debounceDelay);
+void Stakles::button_DOWN_init (byte pin){
+  this->button_DOWN = Button(pin);
 }
 
-bool Stakles::button_L_pressed(){
-  if (this->encoder_time + 300 > millis()) return false;
-  if      (this->button_L.getSpeedLevel() <= 1) this->height++;
-  if      (this->button_L.getSpeedLevel() <= 3) this->height += this->steps_per_round/4;
-  else if (this->button_L.getSpeedLevel() <= 5) this->height += this->steps_per_round/2;
-  else if (this->button_L.getSpeedLevel() <= 9) this->height += this->steps_per_round*1;
-  else                                          this->height += this->steps_per_round*10;
-  this->encoder->write(this->height);
-  this->encoder_time = millis();
+bool Stakles::button_TOP_pressed(){
+  if (this->position->isChanging()) return false;
+  if      (this->button_TOP.getSpeedLevel() <= 1) this->position->increaseBySteps(1);
+  else if (this->button_TOP.getSpeedLevel() <= 3) this->position->increaseByMilimeters(1);
+  else if (this->button_TOP.getSpeedLevel() <= 5) this->position->increaseByMilimeters(2);
+  else if (this->button_TOP.getSpeedLevel() <= 9) this->position->increaseByMilimeters(3);
+  else                                            this->position->increaseByMilimeters(5);
+  this->encoder->write(this->position->getPosition());
   return true;
 }
 
-bool Stakles::button_R_pressed(){
-  if (this->encoder_time + 300 > millis()) return false;
-  if      (this->button_R.getSpeedLevel() <= 1) this->height--;
-  if      (this->button_R.getSpeedLevel() <= 3) this->height -= this->steps_per_round/4;
-  else if (this->button_R.getSpeedLevel() <= 5) this->height -= this->steps_per_round/2;
-  else if (this->button_R.getSpeedLevel() <= 9) this->height -= this->steps_per_round;
-  else                                          this->height -= this->steps_per_round*10;
-  this->encoder->write(this->height);
-  this->encoder_time = millis();
+bool Stakles::button_DOWN_pressed(){
+  if (this->position->isChanging()) return false;
+  if      (this->button_DOWN.getSpeedLevel() <= 1) this->position->increaseBySteps(-1);
+  else if (this->button_DOWN.getSpeedLevel() <= 3) this->position->increaseByMilimeters(-1);
+  else if (this->button_DOWN.getSpeedLevel() <= 5) this->position->increaseByMilimeters(-2);
+  else if (this->button_DOWN.getSpeedLevel() <= 9) this->position->increaseByMilimeters(-3);
+  else                                             this->position->increaseByMilimeters(-5);
+  this->encoder->write(this->position->getPosition());
   return true;
 }
 
 bool Stakles::button_update(){
-  if (this->button_L.isPressed()) this->button_L_pressed();
-  if (this->button_R.isPressed()) this->button_R_pressed();
+  if (this->button_TOP.isPressed()) this->button_TOP_pressed();
+  if (this->button_DOWN.isPressed()) this->button_DOWN_pressed();
   return true;
 }
 
@@ -104,28 +107,13 @@ bool Stakles::button_update(){
 
 void Stakles::encoder_init(byte l_pin, byte r_pin){
   this->encoder = new Encoder(l_pin, r_pin);
-  this->encoder->write(this->height);
+  this->encoder->write(this->position->getPosition());
 }
 
 bool Stakles::encoder_update(){
-  if (this->height == this->encoder->read()) return false;
-  this->height = this->encoder->read();
-  this->encoder_time = millis();
-  return true;
+  return this->position->setPosition(this->encoder->read());
 }
 
-
-/**************************************************/
-/****************   MOVE   ************************/
-/**************************************************/
-
-void Stakles::set_height(unsigned int height){
-  this->height = height;
-}
-
-float Stakles::get_height(){
-  return (float) round((float)this->delta_step * this->height *10)/10;
-}
 
 /**************************************************/
 /****************   DEBUG    **********************/
@@ -134,8 +122,12 @@ float Stakles::get_height(){
 bool Stakles::debug_update(){
   if (this->debug_time + 10000 > millis()) return false;
   this->debug_time = millis();
-  Serial.print("\n\rB:["+String(this->button_L.read())+String(this->button_R.read())+"] A:"+String(this->height, DEC) + " AG:"+String(this->get_height(), DEC) + " x:"+ String(this->count_x) + " V:"+String(analogRead(A0)));
-  this->count_x = 0;
+  Serial.print("\n\rB:["+String(this->button_TOP.read())+String(this->button_DOWN.read())+"]");
+  Serial.print(" position:"+String(this->position->getPosition(), DEC));
+  Serial.print(" height:"+String(this->position->getHeightInMilimeters(), DEC));
+  Serial.print(" loopCount:"+ String(this->loopCount, DEC) + " in 10s");
+  Serial.print(" power:"+String(analogRead(A0), DEC));
+  this->loopCount = 0;
   return true;
 }
 
@@ -144,10 +136,9 @@ bool Stakles::debug_update(){
 /**************************************************/
 
 void Stakles::process(){
-  if (this->debug) this->count_x += 1;
-  this->encoder_update();
-  this->led_update();
-  if (this->encoder_time + 300 > millis()) return;
+  if (this->debug) this->loopCount++;
+  if (this->led_update()) return;
+  if (this->encoder_update()) return;
   this->button_update();
   this->config_update();
   this->debug_update();

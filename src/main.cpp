@@ -1,7 +1,4 @@
-#define ENCODER_USE_INTERRUPTS
-//#define ENCODER_OPTIMIZE_INTERRUPTS
-
-#include "Stakles.h"
+#include <Stakles.h>
 
 Stakles* stakles;
 
@@ -10,17 +7,30 @@ void setup(void)
   Serial.begin(115200);
   Serial.println("Paleidziamos stakles!");
 
-  float milimetersPerRound    = 0.2;
-  unsigned char stepsPerRound = 16;
-  unsigned int maxMilimeters  = 250;
+  const byte powerPin       = A0;
+  const byte displayClkPin  = 8; // CLK D8
+  const byte displayDioPin  = 7; // DIO D7
+  const byte encoderPinA    = 2;
+  const byte encoderPinB    = 3;
+  const byte buttonTopPin   = 9;
+  const byte buttonDownPin  = 10;
 
-  stakles = new Stakles(milimetersPerRound, stepsPerRound, maxMilimeters);
-  stakles->power_init(A0);
-  stakles->led_init(8, 7); // (CLK -> D8, DIO -> D7)
-  stakles->encoder_init(2, 3);
-  stakles->button_TOP_init(9);
-  stakles->button_DOWN_init(10);
-  stakles->init();
+  const unsigned char stepsPerRound = 16;
+  const float milimetersPerRound    = 0.2;
+  const unsigned int maxMilimeters  = 250;
+
+  stakles = new Stakles(
+    powerPin,
+    displayClkPin,
+    displayDioPin,
+    encoderPinA,
+    encoderPinB,
+    buttonTopPin,
+    buttonDownPin,
+    stepsPerRound,
+    milimetersPerRound,
+    maxMilimeters
+  );
 
   Serial.println("\r\nStakles veikia!");
 }

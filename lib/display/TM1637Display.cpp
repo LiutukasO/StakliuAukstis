@@ -82,7 +82,6 @@ void TM1637Display::setBrightness(uint8_t brightness)
 
 void TM1637Display::setSegments(const uint8_t segments[], uint8_t length, uint8_t pos)
 {
-    update_time = millis();
     // Write COMM1
 	start();
 	writeByte(TM1637_I2C_COMM1);
@@ -261,10 +260,6 @@ void TM1637Display::showOn(){
 void TM1637Display::showOff(){
     displayOn = false;
     changeBrightness(0x00);
-}
-
-float TM1637Display::getValue(){
-  return g_value;
 }
 
 void TM1637Display::startBlink(unsigned long interval){

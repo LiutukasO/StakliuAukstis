@@ -1,63 +1,57 @@
+#ifndef Stakles_h
 #define Stakles_h
 
+#define IN_DEBUG_MODE
+#define ENCODER_USE_INTERRUPTS
+
 #include <Config.h>
-#include <TM1637Display.h>
+#include <Display.h>
 #include <Button.h>
 #include <Encoder.h>
 #include <Position.h>
+#include <PowerDetector.h>
 
 class Stakles
 {
   public:
-    Stakles (float milimetersPerRound, unsigned char stepsPerRound, unsigned int maxMilimeters);
-    bool debug = true;
+    Stakles (
+      const byte powerPin,
+      const byte displayClkPin,
+      const byte displayDioPin,
+      const byte encoderPinA,
+      const byte encoderPinB,
+      const byte buttonTopPin,
+      const byte buttonBottomPin,
+      const unsigned char stepsPerRound,
+      const float milimetersPerRound,
+      const unsigned int maxMilimeters
+    );
 
-    void init();
     void process();
-
-    // POWER
-    byte power_port;
-    void power_init(byte pin);
-    bool is_power_on();
-
-    // LED
-    void led_init(byte CLK, byte DIO);
-
-    // BUTTON
-    void button_TOP_init(byte pin);
-    void button_DOWN_init(byte pin);
-
-    // ENCODER
-    void encoder_init(byte l_pin, byte r_pin);
-
-    // MOVE
-    void move_to_top ();
-    void move_to_down ();
 
   private:
 
     // DEBUG
-    unsigned long debug_time = 0;
+    unsigned long debugTime = 0;
     bool          debug_update();
     unsigned long loopCount = 0;
 
     // POWER
-    byte power_pin;
+    PowerDetector* powerDetector;
 
     // CONFIG
     Config* config;
     bool config_update();
 
-    // LED
-    TM1637Display led;
-    bool led_update();
+    // DISPLAY
+    Display* display;
 
     // BUTTON
     Button button_TOP;
     Button button_DOWN;
-    bool button_TOP_pressed();
-    bool button_DOWN_pressed();
-    bool button_update();
+    void button_TOP_pressed();
+    void button_DOWN_pressed();
+    void button_update();
 
     // ENCODER
     Encoder* encoder;
@@ -65,5 +59,6 @@ class Stakles
 
     Position* position;
 
-
 };
+
+#endif

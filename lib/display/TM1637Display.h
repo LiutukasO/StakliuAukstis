@@ -92,8 +92,6 @@ public:
   void startBlink();
   void stopBlink();
   void update();
-  float getValue();
-  unsigned long update_time = 0;
 
 protected:
    void bitDelay();
@@ -109,7 +107,7 @@ private:
     float g_value;
     int   g_data;
     int   g_data_dot;
-    int g_precision = 0;
+    int   g_precision = 0;
     bool blinkStarted = false;
     unsigned long blinkTime;
     unsigned long blinkInterval = 500;

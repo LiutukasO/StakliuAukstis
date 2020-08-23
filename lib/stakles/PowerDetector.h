@@ -9,6 +9,10 @@ class PowerDetector
         
     private:
         unsigned char pin;
+      
+        unsigned char pinMask;
+        volatile unsigned char *pinPort;
+
 };
 
 #endif

@@ -21,7 +21,7 @@ class Config
         bool load();
         bool isValidSecondConfig(unsigned short readFromByte);
 
-        unsigned short maxWriteCount = 10000;
+        unsigned short maxWriteCount = 1000;
 
         char configVersion[7] = {'O','P','U','0','0','1'};
         unsigned short sizeInBytes = sizeof(this->config);

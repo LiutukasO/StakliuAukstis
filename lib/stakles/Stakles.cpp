@@ -29,8 +29,8 @@ Stakles::Stakles (
 /**************************************************/
 
 bool Stakles::config_update(){
-  if (!this->config->setPosition(this->display->getPosition())) return false;
   if (this->powerDetector->isPowerOn()) return false;
+  if (!this->config->setPosition(this->display->getPosition())) return false;
   return this->config->save();
 }
 

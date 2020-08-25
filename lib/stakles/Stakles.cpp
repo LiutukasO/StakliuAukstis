@@ -1,6 +1,5 @@
 #include <Stakles.h>
 
-
 Stakles::Stakles (
       const byte powerPin,
       const byte displayCLK,
@@ -28,10 +27,11 @@ Stakles::Stakles (
 /****************   CONFIG    *********************/
 /**************************************************/
 
-bool Stakles::config_update(){
-  if (this->powerDetector->isPowerOn()) return false;
-  if (!this->config->setPosition(this->display->getPosition())) return false;
-  return this->config->save();
+void Stakles::config_update(){
+  //if (this->powerDetector->isPowerOn()) return;
+  if (this->display->getUpdateTime() +5000 > millis()) return;
+  this->config->setPosition(this->display->getPosition());
+  this->config->save();
 }
 
 /**************************************************/
@@ -39,38 +39,32 @@ bool Stakles::config_update(){
 /**************************************************/
 
 void Stakles::button_TOP_pressed(){
-  signed short int steps = 1;
-  if      (this->button_TOP.getSpeedLevel() <= 1) steps = 1;
-  else if (this->button_TOP.getSpeedLevel() <= 3) steps = this->position->milimetersToSteps(1);
-  else if (this->button_TOP.getSpeedLevel() <= 5) steps = this->position->milimetersToSteps(2);
-  else if (this->button_TOP.getSpeedLevel() <= 9) steps = this->position->milimetersToSteps(3);
-  else                                            steps = this->position->milimetersToSteps(5);
+  signed short int steps;
+  if      (this->button_TOP.getSpeedLevel() <= 1) steps = 8;
+  else if (this->button_TOP.getSpeedLevel() <= 3) steps = 16;
+  else if (this->button_TOP.getSpeedLevel() <= 5) steps = this->position->milimetersToSteps(1);
+  else if (this->button_TOP.getSpeedLevel() <= 9) steps = this->position->milimetersToSteps(1);
+  else                                            steps = this->position->milimetersToSteps(2);
   this->encoder->write(this->display->getPosition()+steps);
+  this->display->update();
 }
 
 void Stakles::button_DOWN_pressed(){
-  signed short int steps = 1;
-  if      (this->button_DOWN.getSpeedLevel() <= 1) steps = 1;
-  else if (this->button_DOWN.getSpeedLevel() <= 3) steps = this->position->milimetersToSteps(1);
-  else if (this->button_DOWN.getSpeedLevel() <= 5) steps = this->position->milimetersToSteps(2);
-  else if (this->button_DOWN.getSpeedLevel() <= 9) steps = this->position->milimetersToSteps(3);
-  else                                             steps = this->position->milimetersToSteps(5);
+  signed short int steps;
+  if      (this->button_DOWN.getSpeedLevel() <= 1) steps = 8;
+  else if (this->button_DOWN.getSpeedLevel() <= 3) steps = 16;
+  else if (this->button_DOWN.getSpeedLevel() <= 5) steps = this->position->milimetersToSteps(1);
+  else if (this->button_DOWN.getSpeedLevel() <= 9) steps = this->position->milimetersToSteps(1);
+  else                                             steps = this->position->milimetersToSteps(2);
   this->encoder->write(this->display->getPosition()-steps);
 }
 
+// Ekrane skaiciai pasikeicia su pavelavimu.
+// Daznai su vienu trumpu paspaudimu pasistumia per dvi padalas.
 void Stakles::button_update(){
+  if (this->display->getUpdateTime() +1000 > millis()) return;
   if (this->button_TOP.isPressed()) this->button_TOP_pressed();
   if (this->button_DOWN.isPressed()) this->button_DOWN_pressed();
-}
-
-
-/**************************************************/
-/****************   ENCODER    ********************/
-/**************************************************/
-
-
-bool Stakles::encoder_update(){
-  return this->display->setPosition(this->encoder->read());
 }
 
 
@@ -78,8 +72,8 @@ bool Stakles::encoder_update(){
 /****************   DEBUG    **********************/
 /**************************************************/
 
-bool Stakles::debug_update(){
-  if (this->loopCount < 100000) return false;
+void Stakles::debug_update(){
+  if (this->loopCount < 100000) return;
   Serial.print("\n\rB:["+String(this->button_TOP.read())+String(this->button_DOWN.read())+"]");
   Serial.print(" position:"+String(this->display->getPosition(), DEC));
   Serial.print(" height:"+String(this->display->getHeightInMilimeters(), DEC));
@@ -90,7 +84,6 @@ bool Stakles::debug_update(){
 
   this->debugTime = millis();
   this->loopCount = 0;
-  return true;
 }
 
 /**************************************************/
@@ -99,12 +92,10 @@ bool Stakles::debug_update(){
 
 void Stakles::process(){
   this->loopCount++;
+  this->display->setPosition(this->encoder->read());
   if (this->display->update()) return;
-  if (this->encoder_update()) return;
-  if (this->loopCount % 4 == 0) {
-    this->config_update();
-    this->button_update();
-    this->debug_update();
-  }
+  if (this->loopCount % 4 == 0) this->config_update();
+  if (this->loopCount % 4 == 1) this->button_update();
+  if (this->loopCount % 4 == 2) this->debug_update();
 }
 

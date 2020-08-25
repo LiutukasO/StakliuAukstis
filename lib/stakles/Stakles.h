@@ -1,7 +1,7 @@
 #ifndef Stakles_h
 #define Stakles_h
 
-#define IN_DEBUG_MODE
+//#define IN_DEBUG_MODE
 #define ENCODER_USE_INTERRUPTS
 
 #include <Config.h>
@@ -32,16 +32,16 @@ class Stakles
   private:
 
     // DEBUG
-    unsigned long debugTime = 0;
-    bool          debug_update();
     unsigned long loopCount = 0;
+    unsigned long debugTime = 0;
+    void          debug_update();
 
     // POWER
     PowerDetector* powerDetector;
 
     // CONFIG
     Config* config;
-    bool config_update();
+    void config_update();
 
     // DISPLAY
     Display* display;
@@ -55,7 +55,6 @@ class Stakles
 
     // ENCODER
     Encoder* encoder;
-    bool encoder_update();
 
     Position* position;
 

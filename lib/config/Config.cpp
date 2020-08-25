@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
+//#define IN_DEBUG_MODE
+
 /**************************************************/
 /****************   CONFIG    *********************/
 /**************************************************/
@@ -15,14 +17,13 @@ Config::Config(unsigned short maxWriteCount){
   this->load();
 }
 
-bool Config::setPosition(signed int position){
-  if (this->config.position == position) return !this->saved;
+void Config::setPosition(signed int position){
+  if (this->config.position == position) return;
   #ifdef IN_DEBUG_MODE
   Serial.print("\n\r set config position:"+String(position, DEC));
   #endif
   this->config.position = position;
   this->saved = false;
-  return true;
 }
 
 signed int Config::getPosition(){

@@ -1,5 +1,7 @@
 #include "Button.h"
 
+//#define IN_DEBUG_MODE
+
 Button::Button (){
 }
 
@@ -28,6 +30,12 @@ unsigned long Button::getStateTime(){
 
 byte Button::getSpeedLevel(){
     unsigned long period = millis() - this->stateChangeLastTime;
-    byte speedLevel = (byte) period / 1000;
+    #ifdef IN_DEBUG_MODE
+    Serial.print("\n\r button period:"+String(period, DEC));
+    #endif
+    byte speedLevel = period / 1000;
+    #ifdef IN_DEBUG_MODE
+    Serial.print(" speed:"+String(speedLevel, DEC));
+    #endif
     return speedLevel;
 }

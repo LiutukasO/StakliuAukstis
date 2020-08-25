@@ -21,5 +21,7 @@ PowerDetector::PowerDetector(unsigned char pin){
 }
 
 bool PowerDetector::isPowerOn(){
-  return (*this->pinPort & this->pinMask) != 0;
+  //return analogRead(this->pin) >= 1020;
+  //return digitalRead(this->pin) == HIGH;
+  return (*this->pinPort & this->pinMask) != 0; // != LOW
 }

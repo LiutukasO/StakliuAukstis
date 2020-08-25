@@ -7,7 +7,7 @@ class Config
         Config ();
         Config (unsigned short maxWriteCount);
 
-        bool setPosition(signed int position);
+        void setPosition(signed int position);
         signed int getPosition();
         
         unsigned short getWriteCounter();

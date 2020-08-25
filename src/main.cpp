@@ -1,3 +1,6 @@
+
+#define IN_DEBUG_MODE
+
 #include <Stakles.h>
 
 Stakles* stakles;
@@ -15,7 +18,7 @@ void setup(void)
   const byte buttonTopPin   = 9;
   const byte buttonDownPin  = 10;
 
-  const unsigned char stepsPerRound = 16;
+  const unsigned char stepsPerRound = 32;
   const float milimetersPerRound    = 0.2;
   const unsigned int maxMilimeters  = 250;
 

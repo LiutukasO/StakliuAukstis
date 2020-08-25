@@ -1,6 +1,8 @@
 #include <Display.h>
 #include <Arduino.h>
 
+//#define IN_DEBUG_MODE
+
 Display::Display (uint8_t pinClk, uint8_t pinDIO, float milimetersPerStep) : TM1637Display(pinClk, pinDIO){
     this->milimetersPerStep = milimetersPerStep;
     this->setBrightness(0x0a);
@@ -26,7 +28,7 @@ float Display::getHeightInMilimeters(){
 
 void Display::show(){
     #ifdef IN_DEBUG_MODE
-    Serial.print("\n\r show to display");
+    Serial.print("\n\r show to display:"+String(this->getHeightInMilimeters(),DEC));
     #endif
     this->showFloat(this->getHeightInMilimeters(), 1);
     this->needToShow = false;

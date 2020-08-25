@@ -4,8 +4,10 @@ Programa skirta obliavimo/frezavimo auksčiui atvaizduoti.
 ## Staklių auksčio nustatymo veikimo logika
 Prie staklių pakėlimo variklio ašies pritvirtinome iš skardos pagamintą apskritą diską su 8 iškirptais tarpais jame.
 Šalia disko sumontuotais InfraRed sensoriais (be jokio fizinio kontakto) yra nustatoma ašies posūklio kryptis ir pasisukimų skaičius.
-Šis pasisukimų skaičius yra išverčiamas į milimetus 1/10 tikslumu ir parodomas staklių panelėje sumontuotame ekrane.
+Šis pasisukimų skaičius yra išverčiamas į milimetus ir suapvalintas iki 1/10 milimetro parodomas staklių panelėje sumontuotame ekrane.
 Reikalui esant, šalia ekrano yra sumontuoti du mygtukai TOP ir DOWN. Jų pagalba galima sukalibruoti įrenginio atmintyje saugomą aukštį.
+
+**Prengtas techninis sprendimas nustato aukštį 0.0125mm tikslumu!**
 
 
 ### Techninis aprašymas
@@ -13,7 +15,8 @@ Su C++ parašyta aplikacija veikia Arduino Nano kontroleryje.
 Prie Arduino Nano prijungti tokie sensoriai:
 - Display - skirtas auksčio atvaizdavimui milimetrais su 1/10 milimetro tisklumu.
 - Mygtukai: TOP ir DOWN. Jie skirti programos atmintyje saugomam auksčiui sukalibruoti.
-- Encoderis.
+- Encoderis - http://www.pjrc.com/teensy/td_libs_Encoder.html
+
 
 Kad elektrai dingus, nedingtu atmintyje saugomo auksčio parodymai, jie yra išsaugomi į EEPROM atminti.
 Tam, kad taupyti EEPROM atminties resursą, buvo padaryti keli apsaugos sprendimai:
@@ -30,7 +33,8 @@ Tam, kad taupyti EEPROM atminties resursą, buvo padaryti keli apsaugos sprendim
 - Nesudėtinga padaryti staklių aukščio valdymą iš Arduino Nano kontrolerio. Pajungus variklį valdančius mygtukus prie relių, kurias valdytu kontroleris.
 
 
-Nauda būtu tokia: aukščio pakėlimas ir nuleidimas vyktu tiksiai pagal užduotus parodymus ekrane.
+**Nauda būtu tokia:**
+aukščio pakėlimas ir nuleidimas vyktu tiksiai pagal užduotus parodymus ekrane. Nebereikėtu žmogui spaudyti variklio valdymo mygtukų po kelis kartus, kad pasiekti tikslų norimą aukštį.
 
-Pvz.:
-Nustačius ekrane norimą aukštį (1/10 milimetro tikslumu), galima būtu paleisti kontroleryje komandą. Ji aktyvuotu reikalingą relę ir variklis pakeistu staklių darbinį aukštį iki nurodyto lygio. Nebereikėtu žmogui spaudytu variklio mugtukų po kelis kartus, kad pasiekti tikslų norimą aukštį.
+Valdymo pvz.:
+Nustačius ekrane norimą aukštį (1/10 milimetro tikslumu), galima būtu paleisti kontroleryje komandą. Ji aktyvuotu reikalingą relę ir variklis pakeistu staklių darbinį aukštį iki nurodyto lygio.

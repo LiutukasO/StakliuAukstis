@@ -1,4 +1,4 @@
-# Gintaro stakles
+# Gintaro staklės
 Programa skirta obliavimo/frezavimo auksčiui atvaizduoti.
 
 ## Staklių auksčio nustatymo veikimo logika
@@ -28,6 +28,8 @@ Tam, kad taupyti EEPROM atminties resursą, buvo padaryti keli apsaugos sprendim
 
 ### Neišnaudotos galimybės
 - Nesudėtinga padaryti staklių aukščio valdymą iš Arduino Nano kontrolerio. Pajungus variklį valdančius mygtukus prie relių, kurias valdytu kontroleris.
+
+
 Nauda būtu tokia: aukščio pakėlimas ir nuleidimas vyktu tiksiai pagal užduotus parodymus ekrane.
 
 Pvz.:

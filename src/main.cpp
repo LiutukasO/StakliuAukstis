@@ -11,10 +11,10 @@ void setup(void)
   Serial.println("Paleidziamos stakles!");
 
   const byte powerPin       = A0;
-  const byte displayClkPin  = 8; // CLK D8
-  const byte displayDioPin  = 7; // DIO D7
-  const byte encoderPinA    = 2;
-  const byte encoderPinB    = 3;
+  const byte displayClkPin  = 25; // 8; // CLK D8
+  const byte displayDioPin  = 26; // 7; // DIO D7
+  const byte encoderPinA    = 22; // 2
+  const byte encoderPinB    = 23; // 3
   const byte buttonTopPin   = 9;
   const byte buttonDownPin  = 10;
 

@@ -1,5 +1,4 @@
 #include <Position.h>
-#include <Arduino.h>
 
 Position::Position (unsigned char stepsPerRound, float milimetersPerRound, unsigned char maxMilimeters){
     this->stepsPerRound = stepsPerRound;
@@ -16,12 +15,12 @@ float Position::getMilimetersPerStep(){
     return this->milimetersPerStep;
 }
 
-signed short int Position::fitPositionToValidRange(signed short int position){
+signed int Position::fitPositionToValidRange(signed int position){
     if (position > this->maxPosition) return this->maxPosition;
     else if (position < 0) return 0;
     return position;
 }
 
-signed short int Position::milimetersToSteps(signed short int milimeters){
+signed int Position::milimetersToSteps(signed int milimeters){
     return this->stepsInOneMilimeter * milimeters;
 }

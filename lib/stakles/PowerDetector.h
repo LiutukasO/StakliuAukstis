@@ -11,7 +11,11 @@ class PowerDetector
         unsigned char pin;
       
         unsigned char pinMask;
+        #if defined(ARDUINO_ARCH_ESP32)
+        volatile unsigned int *pinPort;
+        #else
         volatile unsigned char *pinPort;
+        #endif
 
 };
 

@@ -16,8 +16,8 @@ Stakles::Stakles (
   this->powerDetector = new PowerDetector(powerPin);
   this->position = new Position(stepsPerRound, milimetersPerRound, maxMilimeters);
   this->display = new Display(displayCLK, displayDIO, this->position->getMilimetersPerStep());
-  this->button_TOP = Button(buttonTopPin);
-  this->button_DOWN = Button(buttonDownPin);
+  this->button_TOP = StakliuAukstis::Button(buttonTopPin);
+  this->button_DOWN = StakliuAukstis::Button(buttonDownPin);
   this->config = new Config();
   this->encoder = new Encoder(encoderPinA, encoderPinB);
   this->encoder->write(this->position->fitPositionToValidRange(this->config->getPosition()));

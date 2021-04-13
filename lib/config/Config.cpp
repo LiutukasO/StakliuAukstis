@@ -9,10 +9,12 @@
 /**************************************************/
 
 Config::Config(){
+  EEPROM.begin(512);
   this->load();
 }
 
 Config::Config(unsigned short maxWriteCount){
+  EEPROM.begin(512);
   this->maxWriteCount = maxWriteCount;
   this->load();
 }
@@ -84,7 +86,7 @@ bool Config::load() {
 
   if (Serial) this->print();
 
-  EEPROM.end();
+  EEPROM.commit();
   this->saved = true;
   return true;
 }

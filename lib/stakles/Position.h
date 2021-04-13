@@ -7,8 +7,8 @@ class Position
     Position (unsigned char stepsPerRound, float milimetersPerRound, unsigned char maxMilimeters);
     
     float getMilimetersPerStep();
-    signed short int fitPositionToValidRange(signed short int position);
-    signed short int milimetersToSteps(signed short int milimeters);
+    signed int fitPositionToValidRange(signed int position);
+    signed int milimetersToSteps(signed int milimeters);
 
   private:
 
@@ -23,7 +23,7 @@ class Position
     float milimetersPerStep = milimetersPerRound / stepsPerRound; // 0.2mm / 16 = 0.0125mm
     float stepsInOneMilimeter = 1 / milimetersPerStep; // 1mm / 0.0125mm/step = 80 steps
 
-    signed short int maxPosition = maxMilimeters / milimetersPerStep; // max 20`000 steps
+    signed int maxPosition = maxMilimeters / milimetersPerStep; // max 20`000 steps
 
 };
 

@@ -47,8 +47,8 @@ class Stakles
     Display* display;
 
     // BUTTON
-    Button button_TOP;
-    Button button_DOWN;
+    StakliuAukstis::Button button_TOP;
+    StakliuAukstis::Button button_DOWN;
     void button_TOP_pressed();
     void button_DOWN_pressed();
     void button_update();

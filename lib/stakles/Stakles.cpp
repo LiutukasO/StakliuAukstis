@@ -1,5 +1,7 @@
 #include <Stakles.h>
 
+//#define IN_DEBUG_MODE
+
 Stakles::Stakles (
       const byte powerPin,
       const byte displayCLK,
@@ -74,14 +76,15 @@ void Stakles::button_update(){
 
 void Stakles::debug_update(){
   if (this->loopCount < 100000) return;
-  Serial.print("\n\rB:["+String(this->button_TOP.read())+String(this->button_DOWN.read())+"]");
-  Serial.print(" position:"+String(this->display->getPosition(), DEC));
-  Serial.print(" height:"+String(this->display->getHeightInMilimeters(), DEC));
-  Serial.print(" power:"+String(analogRead(A0), DEC));
+  #ifdef IN_DEBUG_MODE
+    Serial.print("\n\rB:["+String(this->button_TOP.read())+String(this->button_DOWN.read())+"]");
+    Serial.print(" position:"+String(this->display->getPosition(), DEC));
+    Serial.print(" height:"+String(this->display->getHeightInMilimeters(), DEC));
+    Serial.print(" power:"+String(analogRead(A0), DEC));
 
-  unsigned long interval = millis() - this->debugTime;
-  Serial.print(" 100k loop in "+ String(interval, DEC) + " ms");
-
+    unsigned long interval = millis() - this->debugTime;
+    Serial.print(" 100k loop in "+ String(interval, DEC) + " ms");
+  #endif
   this->debugTime = millis();
   this->loopCount = 0;
 }
